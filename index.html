@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NLLB Translator</title>
+
+    <!-- Clear any old service workers from previous sessions -->
+    <script>
+      if ('serviceWorker' in navigator && window.location.hostname === 'localhost') {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          for (let registration of registrations) {
+            registration.unregister();
+            console.log('Unregistered service worker:', registration.scope);
+          }
+        });
+
+        // Also clear caches
+        if ('caches' in window) {
+          caches.keys().then(names => {
+            for (let name of names) {
+              caches.delete(name);
+              console.log('Deleted cache:', name);
+            }
+          });
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unregister Service Worker</title>
+</head>
+<body>
+    <h1>Clearing Service Worker...</h1>
+    <p id="status">Working...</p>
+
+    <script>
+        async function unregisterServiceWorkers() {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+
+            if (registrations.length === 0) {
+                document.getElementById('status').textContent = 'No service workers found. You can close this page.';
+                return;
+            }
+
+            for (let registration of registrations) {
+                await registration.unregister();
+                console.log('Unregistered:', registration);
+            }
+
+            // Clear caches
+            const cacheNames = await caches.keys();
+            for (let cacheName of cacheNames) {
+                await caches.delete(cacheName);
+                console.log('Deleted cache:', cacheName);
+            }
+
+            document.getElementById('status').innerHTML = `
+                <strong>Success!</strong><br>
+                - Unregistered ${registrations.length} service worker(s)<br>
+                - Cleared ${cacheNames.length} cache(s)<br>
+                <br>
+                Now close this tab and reload your app.
+            `;
+        }
+
+        unregisterServiceWorkers();
+    </script>
+</body>
+</html>
